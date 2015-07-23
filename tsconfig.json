@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": false,
+    "sourceMap": true,
+    "noResolve": true,
+    "sortOutoput": true,
+    "target": "ES5"
+  },
+  "files": [
+    "typings/tsd.d.ts"
+  ]
+}
