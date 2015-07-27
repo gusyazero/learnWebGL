@@ -58,7 +58,7 @@ module util {
 		}
 	}
 
-	export function create_vbo(data: Array<number>, gl: WebGLRenderingContext) {
+	export function create_vbo(data: Array<number>, gl: WebGLRenderingContext): WebGLBuffer {
 		// バッファオブジェクトの生成
 		let vbo: WebGLBuffer = gl.createBuffer();
 
