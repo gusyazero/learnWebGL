@@ -4,7 +4,8 @@ var webpack = require('webpack-stream');
 var webpackConfig = require("../../../webpack.config");
 
 // modify some webpack config options
-var myDevConfig = Object.create(webpackConfig);
+//var myDevConfig = Object.create(webpackConfig);
+var myDevConfig = webpackConfig;
 myDevConfig.devtool = "sourcemap";
 myDevConfig.debug = true;
 
