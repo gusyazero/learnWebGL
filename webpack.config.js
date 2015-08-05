@@ -12,21 +12,25 @@ module.exports = {
 		filename: "[name].js",
 		chunkFilename: "[chunkhash].js"
 	},
-	// 依存関係
 	resolve: {
 		root:[path.join(__dirname, 'bower_components')],
-		extensions:['', '.webpack.js', 'web.js', '.js', '.ts']
+		extensions:['', '.webpack.js', 'web.js', '.js', '.ts'],
+		modulesDirectories: ["web_modules", "node_modules", "bower_components"],
+		alias:{}		// @see package.json "browser"
 	},
-	// bowerで取得したライブラリの読み込み用プラグイン
 	plugins: [
 		new webpack.ResolverPlugin(
 			new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
-		)
+		),
+		new webpack.ProvidePlugin({
+			THREE: "three"
+		})
 	],
-// Add loader for .ts files.
 	module: {
 		loaders: [
-			{ test: /\.ts$/, loader: 'awesome-typescript-loader' }
+			{ test: /\.ts$/, loader: 'awesome-typescript-loader?emitRequireType=false' }
+			//{ test: /\.ts$/, loader: 'awesome-typescript-loader' }
+			//{ test: /zepto\.js$/, loader: 'exports?Zepto' },
 		]
 	}
 };

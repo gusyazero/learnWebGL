@@ -7,7 +7,8 @@ var webpackConfig = require("../../../webpack.config");
 
 gulp.task("webpack:build", ['clean', 'test'], function(callback) {
 	// modify some webpack config options
-	var myConfig = Object.create(webpackConfig);
+	//var myConfig = Object.create(webpackConfig);
+	var myConfig = webpackConfig;
 	//myConfig.output.publicPath = config.production.publicPath;
 	myConfig.plugins = myConfig.plugins.concat(
 		new webpack.DefinePlugin({
@@ -17,7 +18,8 @@ gulp.task("webpack:build", ['clean', 'test'], function(callback) {
 			}
 		}),
 		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin()
+		new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.AggressiveMergingPlugin()
 	);
 
 	// run webpack
