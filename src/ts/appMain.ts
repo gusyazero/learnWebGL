@@ -4,7 +4,7 @@ import * as minMatrix from './minMatrix';
 class AppMain {
 
 	public canvas: HTMLCanvasElement;
-	public glContext: WebGLRenderingContext;
+	public gl: WebGLRenderingContext;
 
 	public canvasId: string;
 	public canvasWidth: number;
@@ -23,10 +23,10 @@ class AppMain {
 		this.canvas.width = this.canvasWidth;
 		this.canvas.height = this.canvasHeight;
 
-		this.glContext = this.getWebGLContext(this.canvas);
-		this.glContext.clearColor(0.0, 0.0, 0.0, 1.0);
-		this.glContext.clearDepth(1.0);
-		this.glContext.clear(this.glContext.COLOR_BUFFER_BIT | this.glContext.DEPTH_BUFFER_BIT);
+		this.gl = this.getWebgl(this.canvas);
+		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+		this.gl.clearDepth(1.0);
+		this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 	}
 
@@ -35,7 +35,7 @@ class AppMain {
 		return elem;
 	}
 
-	public getWebGLContext(canvas: HTMLCanvasElement): WebGLRenderingContext {
+	public getWebgl(canvas: HTMLCanvasElement): WebGLRenderingContext {
 		let context: WebGLRenderingContext = <WebGLRenderingContext>canvas.getContext('webgl')
 			|| <WebGLRenderingContext>canvas.getContext('experimental-webgl');
 		return context;
@@ -43,14 +43,14 @@ class AppMain {
 
 	main(): void {
 		// 頂点シェーダ・フラグメントシェーダの生成
-		let v_shader: WebGLShader = <WebGLShader>util.create_shader('vs', this.glContext);
-		let f_shader: WebGLShader = <WebGLShader>util.create_shader('fs', this.glContext);
+		let v_shader: WebGLShader = <WebGLShader>util.create_shader('vs', this.gl);
+		let f_shader: WebGLShader = <WebGLShader>util.create_shader('fs', this.gl);
 
 		// プログラムオブジェクトの生成＆リンク
-		let prg: WebGLProgram = <WebGLProgram>util.create_program(v_shader, f_shader, this.glContext);
+		let prg: WebGLProgram = <WebGLProgram>util.create_program(v_shader, f_shader, this.gl);
 
 		// attributeLocation の取得
-		let attLocation: number = this.glContext.getAttribLocation(prg, 'position');
+		let attLocation: number = this.gl.getAttribLocation(prg, 'position');
 
 		// attributeの要素数（今回はxyzのみ）
 		let attStride: number = 3;
@@ -63,16 +63,16 @@ class AppMain {
 		];
 
 		// VBO の生成
-		let vbo: WebGLBuffer = util.create_vbo(vertex_position, this.glContext);
+		let vbo: WebGLBuffer = util.create_vbo(vertex_position, this.gl);
 
 		// VBO のバインド
-		this.glContext.bindBuffer(this.glContext.ARRAY_BUFFER, vbo);
+		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vbo);
 
 		// attribute属性の有効化
-		this.glContext.enableVertexAttribArray(attLocation);
+		this.gl.enableVertexAttribArray(attLocation);
 
 		// attribute属性を登録
-		this.glContext.vertexAttribPointer(attLocation, attStride, this.glContext.FLOAT, false, 0, 0);
+		this.gl.vertexAttribPointer(attLocation, attStride, this.gl.FLOAT, false, 0, 0);
 
 		// 行列ライブラリを生成
 		let matIV = new minMatrix.MatIV();
@@ -94,16 +94,16 @@ class AppMain {
 		matIV.multiply(mvpMatrix, mMatrix, mvpMatrix);
 
 		// uniformLocation の取得
-		let uniLocation = this.glContext.getUniformLocation(prg, 'mvpMatrix');
+		let uniLocation = this.gl.getUniformLocation(prg, 'mvpMatrix');
 
 		// uniformLocation へ座標変換行列をバインド
-		this.glContext.uniformMatrix4fv(uniLocation, false, mvpMatrix);
+		this.gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
 
 		// モデルの描画
-		this.glContext.drawArrays(this.glContext.TRIANGLES, 0, 3);
+		this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
 
 		// コンテキストの再描画
-		this.glContext.flush();
+		this.gl.flush();
 	}
 
 
